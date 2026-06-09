@@ -76,6 +76,42 @@
             text-transform: uppercase;
         } 
 
+        /* --- REGISTRATION OVERLAY --- */
+        #auth-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--pure-white);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .auth-box {
+            max-width: 450px;
+            width: 100%;
+            border: 3px solid var(--pure-black);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .auth-box h2 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+        .auth-box input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            border: 1px solid var(--pure-black);
+            margin-bottom: 20px;
+            outline: none;
+            text-align: center;
+            font-weight: 600;
+        }
+
         /* --- MAIN VIEWPORT LAYOUT --- */
         .app-container {
             max-width: 1500px;
@@ -138,7 +174,7 @@
         .river {
             fill: none;
             stroke: var(--pure-black);
-            stroke-width: 1.8;
+            stroke-width: 2.2;
         } 
 
         .grid-line {
@@ -166,6 +202,17 @@
             stroke: var(--pure-white);
             r: 9;
         } 
+
+        .mountain-node {
+            fill: var(--pure-white);
+            stroke: var(--pure-black);
+            stroke-width: 2;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .mountain-node:hover, .mountain-node.active-node {
+            fill: var(--pure-black);
+        }
 
         .node-text {
             font-size: 10px;
@@ -260,10 +307,11 @@
         } 
 
         .quest-text {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             letter-spacing: -0.5px;
+            line-height: 1.4;
         } 
 
         .options-group {
@@ -274,7 +322,7 @@
 
         .opt-row {
             width: 100%;
-            padding: 18px 20px;
+            padding: 16px 20px;
             background: var(--pure-white);
             border: 1px solid var(--pure-black);
             text-align: left;
@@ -418,20 +466,29 @@
 </head>
 <body> 
 
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h2>ትንሹ FaithMap ፈተና</h2>
+            <p style="font-size: 0.9rem; color: var(--mid-gray); margin-bottom: 25px;">እባክዎ መጀመሪያ ሙሉ ስምዎን በትክክል ያስገቡ</p>
+            <input type="text" id="student-name-input" placeholder="የተማሪው ሙሉ ስም..." autocomplete="off">
+            <button class="btn-black" style="width: 100%;" onclick="startAppWithIdentity()">ፈተናውን ጀምር</button>
+        </div>
+    </div>
+
     <header>
         <div class="logo-area">
             <h1>Tinishu FaithMap ተማሪው</h1>
-            <p>50 ማትሪክስ፡ የቅዱሳት መካናት እውቀት መመርመሪያ ድረ-ገጽ</p>
+            <p>50 ማትሪክስ፡ የቅዱሳት መካናት፣ የጌታ ትምህርቶችና የሐዋርያት ጉዞ እውቀት መመርመሪያ</p>
+            <p style="font-size: 0.85rem; color: #000; font-weight: bold; margin-top: 4px;">ተማሪ፦ <span id="display-student-name">...</span></p>
         </div>
         <div class="edition-badge">Level by level</div>
     </header> 
 
     <div class="app-container">
         
-        <!-- LEFT PANELS: HIGH FIDELITY CARTOGRAPHY -->
         <div>
             <div class="panel-header">
-                <span>01 / ትክክለኛ የካርታ ቅርጽ</span>
+                <span>01 / ትክክለኛ የካርታ ቅርጽ (ከተሞች፣ ወንዞችና ተራሮች)</span>
                 <span style="font-size:0.7rem; font-weight:400;">SCALED GEOGRAPHY</span>
             </div> 
 
@@ -449,13 +506,14 @@
 
                     <path class="coastline" d="M 0,60 Q 85,130 75,230 T 45,430 T 95,590 T 15,750" />
                     <path class="water" d="M 365,165 C 390,155 405,175 400,200 C 390,225 370,215 365,200 Z" />
-                    <path class="river" d="M 377,210 Q 365,255 380,305 T 370,405 T 385,495" />
-                    <path class="water" d="M 385,495 C 410,500 415,545 410,585 C 405,625 400,655 380,655 C 365,655 370,585 375,545 Z" />
+                    <path class="river" d="M 382,208 Q 380,260 388,320 T 385,420 T 390,510" />
+                    <path class="water" d="M 385,510 C 410,515 415,555 410,595 C 405,635 400,665 380,665 C 365,665 370,595 375,555 Z" />
 
                     <path class="route-path" d="M 375,120 L 320,195 L 345,245 L 375,340 L 280,565 L 295,615" /> 
 
                     <text x="30" y="300" class="node-text" transform="rotate(-90 30 300)" style="fill:var(--mid-gray); font-weight:300;">ሜዲትራኒያን ባህር</text>
                     <text x="415" y="190" class="node-text" style="font-size:8px;">የገሊላ ባህር</text>
+                    <text x="345" y="360" class="node-text" style="font-size:8px; fill:var(--mid-gray);">የዮርዳኖስ ወንዝ</text>
                     <text x="425" y="575" class="node-text" style="font-size:8px;">የሙት ባህር</text> 
 
                     <circle class="map-node" id="n-ቅፍርናሆም" cx="375" cy="160" r="5.5" onclick="clickMapNode('ቅፍርናሆም')" />
@@ -467,6 +525,9 @@
                     <circle class="map-node" id="n-ናዝሬት" cx="320" cy="195" r="5.5" onclick="clickMapNode('ናዝሬት')" />
                     <text x="260" y="200" class="node-text">ናዝሬት</text> 
 
+                    <polygon class="mountain-node" id="n-ደብረታቦር" points="350,210 355,222 345,222" onclick="clickMapNode('ደብረታቦር')" />
+                    <text x="360" y="222" class="node-text" style="font-style: italic;">⛰ ደብረ ታቦር</text>
+
                     <circle class="map-node" id="n-ሰማርያ" cx="345" cy="340" r="5.5" onclick="clickMapNode('ሰማርያ')" />
                     <text x="285" y="345" class="node-text">ሰማርያ</text> 
 
@@ -476,19 +537,21 @@
                     <circle class="map-node" id="n-ኢየሩሳሌም" cx="280" cy="565" r="5.5" onclick="clickMapNode('ኢየሩሳሌም')" />
                     <text x="195" y="570" class="node-text">ኢየሩሳሌም</text> 
 
+                    <polygon class="mountain-node" id="n-ደብረዘይት" points="305,555 310,567 300,567" onclick="clickMapNode('ደብረዘይት')" />
+                    <text x="315" y="565" class="node-text" style="font-style: italic;">⛰ ደብረ ዘይት</text>
+
                     <circle class="map-node" id="n-ቤተልሔም" cx="295" cy="615" r="5.5" onclick="clickMapNode('ቤተልሔም')" />
                     <text x="210" y="620" class="node-text">ቤተልሔም</text>
                 </svg>
             </div> 
 
             <div class="info-board" id="meta-viewport">
-                <h3 id="meta-title">የቦታዎች ማውጫ</h3>
-                <p id="meta-desc">በካርታው ላይ ያሉትን መጋጠሚያ ነጥቦች በመንካት ትክክለኛውን መልክዓ-ምድራዊ ማብራሪያና የመጽሐፍ ቅዱስ ጥቅስ ተዛምዶ እዚህ መመልከት ይችላሉ።</p>
+                <h3 id="meta-title">የቦታዎችና የመልክዓ-ምድር ማውጫ</h3>
+                <p id="meta-desc">በካርታው ላይ ያሉትን መጋጠሚያ ነጥቦች ወይም የተራራ ምልክቶችን በመንካት መግለጫውንና የመጽሐፍ ቅዱስ ጥቅስ ተዛምዶን እዚህ መመልከት ይችላሉ።</p>
                 <div id="meta-scripture" class="verse-ref" style="display:none;"></div>
             </div>
         </div> 
 
-        <!-- RIGHT PANELS: 50 COMPREHENSIVE MATRIX QUIZ -->
         <div>
             <div class="panel-header">
                 <span>02 / የጥያቄዎች ማትሪክስ (50 ጥያቄዎች)</span>
@@ -499,7 +562,7 @@
                 <div class="difficulty-nav">
                     <button class="diff-btn active" id="tier-easy" onclick="switchTier('easy')">ቀላል (1-15)</button>
                     <button class="diff-btn" id="tier-medium" onclick="switchTier('medium')">መካከለኛ (16-35)</button>
-                    <button class="diff-btn" id="tier-hard" onclick="switchTier('hard')">ከባድ (36-50)</button>
+                    <button class="diff-btn" id="tier-hard" onclick="switchTier('hard')">ሐዋርያት ታሪክ (36-50)</button>
                 </div> 
 
                 <div id="quiz-interactive-area">
@@ -523,14 +586,13 @@
                     </div>
                 </div> 
 
-                <!-- Score Reporting Dashboard -->
                 <div class="score-board" id="ui-scoreboard">
                     <div class="score-num" id="final-score-percent">0%</div>
                     
-                    <!-- DYNAMIC VISUAL REPORT CARD -->
                     <div class="report-card-canvas" id="printable-report">
                         <h4>የውጤት መግለጫ ካርድ</h4>
                         <div class="report-grid">
+                            <span>የተማሪው ስም:</span> <span id="r-name">-</span>
                             <span>የተፈተኑበት ደረጃ:</span> <span id="r-level">-</span>
                             <span>ያገኙት ነጥብ:</span> <span id="r-score">0 / 0</span>
                             <span>የወሰደው ጊዜ:</span> <span id="r-time">00:00</span>
@@ -556,14 +618,29 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
-        /* --- TELEGRAM DYNAMIC KEY CONSTANTS --- */
+        /* --- TELEGRAM BOT CONFIGURATION --- */
         const TG_BOT_TOKEN = "8289930496:AAHKqEPvRYaGQfRfsCjSBbyk-53dqzzzu0s";
         const TG_CHAT_ID = "7388335181";
+
+        let studentName = "";
+
+        function startAppWithIdentity() {
+            const inputField = document.getElementById('student-name-input');
+            const name = inputField.value.trim();
+            if (name.length < 2) {
+                alert("እባክዎ ትክክለኛ የተማሪ ስም ያስገቡ!");
+                return;
+            }
+            studentName = name;
+            document.getElementById('display-student-name').innerText = studentName;
+            document.getElementById('auth-overlay').style.display = 'none';
+            switchTier('easy');
+        }
 
         const geoRegistry = {
             "ቅፍርናሆም": {
                 title: "ቅፍርናሆም (Capernaum)",
-                desc: "በገ黎ላ ባህር ሰሜናዊ ጫፍ ላይ የምትገኝ ከተማ ስትሆን፣ ጌታችን በርካታ ደቀመዛሙርትን የጠራባትና በርካታ ተአምራትን በማድረግ 'የራሱ ከተማ' የተባለች ስፍራ ናት።",
+                desc: "በገሊላ ባህር ሰሜናዊ ጫፍ ላይ የምትገኝ ከተማ ስትሆን፣ ጌታችን በርካታ ደቀመዛሙርትን የጠራባትና በርካታ ተአምራትን በማድረግ 'የራሱ ከተማ' የተባለች ስፍራ ናት።",
                 verse: "ማቴዎስ 9:1 — 'በታንኳም ገብቶ ተሻገረና ወደ ገዛ ከተማው መጣ።'"
             },
             "ቃና": {
@@ -576,9 +653,14 @@
                 desc: "በገሊላ ኮረብታማ ክልል ውስጥ የምትገኝ ሲሆን፣ መልአኩ ቅዱስ ገብርኤል ለቅድስት ድንግል ማርያም የምስራች ያበሰረባት እና ጌታችን ለሰላሳ ዓመታት ያደገባት ከተማ ናት።",
                 verse: "ሉቃስ 2:51 — 'ከእነርሱም ጋር ወርዶ ወደ ናዝሬት መጣ፥ ይታዘዝላቸውም ነበር።'"
             },
+            "ደብረታቦር": {
+                title: "ደብረ ታቦር (Mount Tabor)",
+                desc: "በገሊላ አውራጃ የሚገኝ ታዋቂ ተራራ ሲሆን፣ ጌታችን ኢየሱስ ክርስቶስ ቅዱሳን ጴጥሮስን፣ ያዕቆብንና ዮሐንስን ይዞ በመውጣት በፊታቸው የተለወጠበት፣ ፊቱ እንደ ፀሐይ የበራበትና ልብሱ እንደ ብርሃን ነጭ የሆነበት የተቀደሰ ተራራ ነው።",
+                verse: "ማቴዎስ 17:1-2 — 'በነገረ ጊዜም ኢየሱስ ጴጥሮስንና ያዕቆብን ወንድሙንም ዮሐንስን ይዞ ወደ ረጅም ተራራ ለብቻቸው አወጣቸው። በፊታቸውም ተለወጠ...'"
+            },
             "ሰማርያ": {
                 title: "ሰማርያ (Samaria)",
-                desc: "በይሁዳና በገሊላ መካከል የሚገኝ ሰፊ ግዛት ሲሆን፣ ጌታችን በያዕቆብ ጉድጓድ አጠገብ ከሰማርያዊቷ ሴት ጋር በጥልቅ መለኮታዊ ምስጢር የተነጋገረበት ታሪካዊ ስፍራ ነው።",
+                desc: "በይሁዳና በገሊላ መካከል የሚገኝ ሰፊ ግዛት ሲሆን፣ ጌታችን በያዕቆብ ጉድጓድ አጠገብ ከሰማርያዊቷ ሴት ጋር በጥልቅ መለኮታዊ ምስጢር ስለ ሕይወት ውሃ የተነጋገረበት ታሪካዊ ስፍራ ነው።",
                 verse: "ዮሐንስ 4:4 — 'በሰማርያም ሊያልፍ ግድ ሆነበት።'"
             },
             "ኢያሪኮ": {
@@ -591,9 +673,14 @@
                 desc: "የይሁዳ ተራራማ ማዕከል፣ የሰሎሞን መቅደስ መገኛ፣ ጌታችን ክርስቶስ የተሰቀለባት፣ የተቀበረባት፣ በሦስተኛው ቀን በታላቅ ክብር ተነሥቶ ያረገባትና መንፈስ ቅዱስ የወረደባት ቅድስት ከተማ ናት።",
                 verse: "ማርቆስ 11:11 — 'ኢየሱስም ወደ ኢየሩሳሌም ወደ መቅደስ ገባ፤'"
             },
+            "ደብረዘይት": {
+                title: "ደብረ ዘይት (Mount of Olives)",
+                desc: "ከኢየሩሳሌም በስተምስራቅ የሚገኝ ተራራ ሲሆን፣ ጌታችን በተደጋጋሚ ጊዜ ያስተማረበት፣ ስለ ዓለም ፍጻሜ የነገረበት፣ በጌቴሴማኒ የአትክልት ስፍራ የጸለየበትና አገልግሎቱን ፈጽሞ በክብር ወደ ሰማይ ያረገበት ስፍራ ነው።",
+                verse: "ሐዋርያት ሥራ 1:12 — 'በዚያን ጊዜ ደብረ ዘይት ከሚባለው ተራራ ወደ ኢየሩሳሌም ተመለሱ...'"
+            },
             "ቤተልሔም": {
                 title: "ቤተልሔም (Bethlehem)",
-                desc: "ከኢየሩሳሌም በስተደቡብ የምትገኝ የይሁዳ ከተማ ስትሆን፣ ነቢዩ ሚክያስ አስቀድሞ እንደተነበየውና የእግዚአብሔር መልአክ ለረኞች እንዳበሰረው የዓለም መድኃኒት በሥጋ የተወለደባት የተቀደሰች ስፍራ ናት።",
+                desc: "ከኢየሩሳሌም በስተደቡብ የምትገኝ የይሁዳ ከተማ ስትሆን፣ ነቢዩ ሚክያስ አስቀድሞ እንደተነበየው የዓለም መድኃኒት በሥጋ የተወለደባት የተቀደሰች ስፍራ ናት።",
                 verse: "ማቴዎስ 2:1 — 'ኢየሱስም በይሁዳ ቤተ ልሔም በንጉሡ በሄሮድስ ዘመን በተወለደ ጊዜ...'"
             }
         }; 
@@ -639,21 +726,21 @@
                 { q: "35. ጌታችን በጥፋቷ ምክንያት 'እስከ ሲኦል ትወርጃለሽ' በማለት የረገማትና ተአምራቱን ያልተቀበለችው ከተማ ማን ናት?", o: ["ቅፍርናሆም", "ኢየሩሳሌም", "ቤተልሔም", "ኢያሪኮ"], c: 0 }
             ],
             hard: [
-                { q: "36. ጌታችን ክርስቶስ አገልግሎቱን የጀመረበት 'የአይሁድ ዓመት' የትኛው የሮማ ቄሣር በነገሰ በ15ኛው ዓመት ነበር?", o: ["ኔሮን ቄሣር", "ጢባርዮስ ቄሣር", "አውግስጦስ ቄሣር", "ቅላውዲዎስ"], c: 1 },
-                { q: "37. ጌታችን ክርስቶስ በወንጌል 'የጌርጋሴኖን አገር' ወይም 'የጋዳሬኖን አገር' ተብሎ በተጠቀሰው ስፍራ ያደረገው ታላቅ ተአምር ምንድነው?", o: ["ውሃ ላይ መሄድ", "አጋንንትን አስወጥቶ ወደ አሳማዎች መስደድ", "አምስት ሺህ ህዝብ መመገብ", "ለምጻም ማንጻት"], c: 1 },
-                { q: "38. በብሉይ ኪዳን 'ኬብሮን' በመባል የምትታወቀውና ማርያም ኤልሳቤጥን ለመጠየቅ የሄደችበት የይሁዳ ተራራማ ከተማ ማን ትባላለች?", o: ["ዮጵያ", "ዓይን ካሬም", "ጋዛ", "አስቀሎና"], c: 1 },
-                { q: "39. ጌታችን ክርስቶስ በይሁዳ ምድረበዳ በፈተና ወቅት 'ሰው ከእግዚአብሔር አፍ በሚወጣ ቃል ሁሉ እንጂ በእንጀራ ብቻ አይኖርም' ሲል ከየትኛው የብሉይ ኪዳን መጽሐፍ ጠቀሰ?", o: ["ኦሪት ዘፍጥረት", "ኦሪት ዘዳግም", "ትቢተ ኢሳይያስ", "መዝሙረ ዳዊት"], c: 1 },
-                { q: "40. ጌታችን በጥንታዊቷ ከተማ በጢሮስና በሲዶና አውራጃዎች (ከእስራኤል ውጪ) የተገለጠው የማንን ሴት ልጅ ለመፈወስ ነበር?", o: ["የሮማ መኮንን ልጅ", "የከነዓናዊቷን ሴት ልጅ", "የምኩራብ አለቃውን ልጅ", "የሳምራዊቷን ሴት ልጅ"], c: 1 },
-                { q: "41. ኢየሱስ ክርስቶስ በቅፍርናሆም ምኩራብ ያስተማረውና አይሁድን እርስ በእርስ ያከራከረው ጥልቅ ትምህርት የትኛው ነው?", o: ["'እኔ የሕይወት እንጀራ ነኝ' የሚለው ትምህርት", "የባለጠጋውና አልዓዛር ምሳሌ", "የሰናፍጭ ቅንጣት ትምህርት", "ስለ መክሊት የተሰጠው ትምህርት"], c: 0 },
-                { q: "42. ጌታችን ክርስቶስ በደብረ ዘይት ተራራ ላይ ሆኖ ወደ ኢየሩሳሌም እያየ ያለቀሰው ስለ ምን ነበር?", o: ["ስለ ህማማቱ መቅረብ", "ከተማዋ ወደፊት በሮማውያን እንደምትጠፋ አስቀድሞ በማየት", "ስለ ይሁዳ ክህደት", "ደቀመዛሙርቱ ስለሚተዉት"], c: 1 },
-                { q: "43. በዮሐንስ ወንጌል ምዕራፍ 5 ላይ የተጠቀሰችው የቤተሳይዳ መጠመቂያ በዕብራይስጥ ቋንቋ ምን ትርጉም አላት? ስንትስ መተላለፊያ (በረንዳ) ነበራት?", o: ["የምሕረት ቤት - 5 በረንዳ", "የውሃ መገኛ - 3 በረንዳ", "የጸሎት ቤት - 4 በረንዳ", "የንጉስ ስፍራ - 2 በረንዳ"], c: 0 },
-                { q: "44. ጌታችን ክርስቶስ በስጋ ከተወለደ በኋላ በስምንተኛው ቀን ሊገረዝ ወደ የትኛው ስፍራ ተወሰደ?", o: ["ወደ ናዝሬት ምኩራብ", "ወደ ኢየሩሳሌም ቤተ መቅደስ", "ወደ ቤተልሔም ዋሻ", "በነበረበት በግብፅ"], c: 1 },
-                { q: "45. ጌታችን ክርስቶስ በመስቀል ላይ ሳለ 'ኤሎሄ ኤሎሄ ለማ ሰበቅታኒ' ብሎ የጮኸው ድምጽ ትርጉሙ ምንድነው?", o: ["አምላኬ አምላኬ፥ ስለ ምን ተውኸኝ?", "አባት ሆይ፥ ነፍሴን በእጅህ እሰጣለሁ", "ተፈጸመ!", "አባት ሆይ፥ የሚያደርጉትን አያውቁምና ይቅር በላቸው"], c: 0 },
-                { q: "46. ጌታችን ክርስቶስ በይሁዳ ምድር በአገልግሎቱ ማብቂያ ላይ በፋሲካ በዓል ዕለት የተያዘው በየትኛው የዕብራይስጥ ወርና ቀን ነበር?", o: ["ኒሳን 14 ቀን", "ቲሽሪ 10 ቀን", "ሲቫን 6 ቀን", "ኪስሌቭ 25 ቀን"], c: 0 },
-                { q: "47. ከትንሣኤ በኋላ ጌታችን በገሊላ ባህር (ጢባርዮስ) ዳርቻ ለደቀመዛሙርቱ ተገልጦ ለስምዖን ጴጥሮስ 'በጎቼን አሰማራ' በማለት ኃላፊነት የሰጠው ስንት ጊዜ ጠይቆት ነበር?", o: ["አንድ ጊዜ", "ሁለት ጊዜ", "ሦስት ጊዜ", "አራት ጊዜ"], c: 2 },
-                { q: "48. ጌታችን ክርስቶስ ትምህርቱንና አገልግሎቱን የፈጸመበትና በክብር ወደ ሰማይ ያረገበት 'ደብረ ዘይት' ተራራ ከኢየሩሳሌም ከተማ በየትኛው አቅጣጫ ይገኛል?", o: ["በስተምስራቅ በኩል", "በስተምዕራብ በኩል", "በስተሰሜን በኩል", "በስተደቡብ በኩል"], c: 0 },
-                { q: "49. ጌታችን ክርስቶስ 'የቀያፋ ግቢ' ከመወሰዱ በፊት መጀመሪያ የታሰረውና የተወሰደው ወደ ማን ቤት ነበር?", o: ["ወደ ጲላጦስ ቤት", "ወደ ሐና ቤት", "ወደ ሄሮድስ ቤተ መንግስት", "ወደ ገማልያል ቤት"], c: 1 },
-                { q: "50. ጌታችን ክርስቶስ ከሙታን ተነስቶ በምድር ላይ ለስንት ቀናት ለደቀመዛሙርቱ እየተገለጠ ስለ እግዚአብሔር መንግስት ነገራቸው?", o: ["30 ቀናት", "40 ቀናት", "50 ቀናት", "7 ቀናት"], c: 1 }
+                { q: "36. በሐዋርያት ሥራ ምዕራፍ 2 መሠረት፣ በዓለ ኃምሳ በተፈጸመ ጊዜ መንፈስ ቅዱስ በሐዋርያት ላይ የወረደው በየትኛው ከተማ ነው?", o: ["በአንጾኪያ", "በሰማርያ", "በኢየሩሳሌም", "በደማስቆ"], c: 2 },
+                { q: "37. ቅዱስ እስጢፋኖስ በድንጋይ ተወግሮ በሰማዕትነት ሲያርፍ ልብሱን ይጠብቁ የነበረው ሳውል (ጳውሎስ) ያደገው በየትኛው ከተማ ነው?", o: ["በጠርሴስ", "በሮሜ", "በኤፌሶን", "በቆሮንቶስ"], c: 0 },
+                { q: "38. ሳውል ክርስቲያኖችን ለማሰር ወደ ደማስቆ ሲጓዝ በብርሃን የተገለጠለትና የተለወጠው ከየትኛው ከተማ አቅራቢያ ነው?", o: ["ወደ ኬብሮን ሲቃረብ", "ወደ ደማስቆ ሲቃረብ", "ወደ ሰማርያ ሲገባ", "በኢያሪኮ መንገድ"], c: 1 },
+                { q: "39. በሐዋርያት ታሪክ መሠረት፣ የክርስቶስ ተከታዮች ለመጀመሪያ ጊዜ 'ክርስቲያን' ተብለው የተጠሩት በየትኛው ታላቅ ከተማ ነው?", o: ["በኢየሩሳሌም", "በአንጾኪያ", "በፊልጵስዩስ", "በተሰሎንቄ"], c: 1 },
+                { q: "40. ሐዋርያው ቅዱስ ጴጥሮስ ጣቢታ የተባለችውን ደግ ሴት ከሞት ያስነሳባት የወደብ ከተማ ማን ትባላለች?", o: ["ዮጵያ", "ቂሳርያ", "ጋዛ", "ሰሎሜ"], c: 0 },
+                { q: "41. ቅዱስ ጳውሎስና በርናባስ በመጀመሪያው የሐዋርያዊ ጉዟቸው መንፈስ ቅዱስ በለያቸው መሠረት የተነሱት ከየትኛው የሶርያ ከተማ ነበር?", o: ["ከደማስቆ", "ከአንጾኪያ", "ከጢሮስ", "ከኢየሩሳሌም"], c: 1 },
+                { q: "42. ቅዱስ ጳውሎስ በራዕይ 'ወደ ማቄዶንያ ተሻገርና እርዳን' የሚል ሰው አይቶ ወንጌልን ወደ አውሮፓ ለማስፋፋት የሄደባት የመጀመሪያዋ ከተማ ማን ናት?", o: ["አቴና", "ቆሮንቶስ", "ፊልጵስዩስ", "ሮሜ"], c: 2 },
+                { q: "43. ቅዱስ ጳውሎስ በአቴና ከተማ በነበረበት ጊዜ 'ለማይታወቅ አምላክ' የሚል መሠዊያ አይቶ ታላቅ ስብከት የሰበከበት ስፍራ ምን ይባላል?", o: ["አርዮስፋጎስ", "የኤፌሶን ቲያትር", "የካፒቶል ኮረብታ", "የፊልጶስ ምኩራብ"], c: 0 },
+                { q: "44. በሐዋርያት ሥራ ምዕራፍ 19 መሠረት፣ የአርጤምስ መቅደስ መገኛ በነበረችውና ጳውሎስ ታላቅ ተሃድሶ ባመጣባት ከተማ ረብሻ ያስነሳው አንጥረኛ ማን ይባላል?", o: ["አቂላ", "ድሜጥሮስ", "እስክንድሮስ", "ፊልጶስ"], c: 1 },
+                { q: "45. ሐዋርያው ቅዱስ ጳውሎስ በሮማውያን እጅ ተይዞ በሰንሰለት ታስሮ በመጨረሻው የህይወት ምዕራፍ ወንጌልን የሰበከባትና የሰማዕትነት አክሊል የተቀበለባት ከተማ የትኛዋ ናት?", o: ["ኤፌሶን", "ቆሮንቶስ", "ሮሜ", "እስክንድርያ"], c: 2 },
+                { q: "46. ሐዋርያው ፊልጶስ የኢትዮጵያውን ጃንደረባ አግኝቶ ያጠመቀው ከኢየሩሳሌም ወደ የት በሚወስደው በምድረ በዳ መንገድ ላይ ነበር?", o: ["ወደ ሰማርያ", "ወደ ጋዛ", "ወደ ዮጵያ", "ወደ ደማስቆ"], c: 1 },
+                { q: "47. ወንጌላዊው ቅዱስ ዮሐንስ የዮሐንስ ራዕይ መጽሐፍን የጻፈው በሮማውያን ተሰዶ በነበረበት በየትኛው ደሴት ላይ ሆኖ ነው?", o: ["በቀርጤስ ደሴት", "በቆጵሮስ ደሴት", "በፍጥሞ ደሴት", "በማልታ ደሴት"], c: 2 },
+                { q: "48. በሐዋርያት ሥራ ምዕራፍ 15 ላይ የአህዛብ ክርስቲያኖችን ሥርዓት ለመወሰን የመጀመሪያው የሐዋርያት ሲኖዶስ (ጉባኤ) የተደረገው የት ነው?", o: ["በአንጾኪያ", "በኢየሩሳሌም", "በሮሜ", "በኤፌሶን"], c: 1 },
+                { q: "49. ቅዱስ ጳውሎስ ወደ ሮሜ በምርኮ ሲጓዝ መርከቡ ተሰባብራ ለሦስት ወራት በደኅና የተቀመጠባትና ደሴቲቱን ሙሉ ወደ ክርስትና የለወጠባት ስፍራ ማን ትባላለች?", o: ["መሊጤ (ማልታ)", "ቆጵሮስ", "ቀርጤስ", "ሮዶስ"], c: 0 },
+                { q: "50. ሐዋርያው ቅዱስ ጳውሎስ ከጌታ ጥሪ ከተቀበለ በኋላ ወደ አረብ ሀገር ሄዶ ቆይቶ ወደ ማኑ ከተማ ተመልሶ ለአገልግሎት የተዘጋጀው ለስንት ዓመታት ነው?", o: ["ለ 3 ዓመታት", "ለ 5 ዓመታት", "ለ 7 ዓመታት", "ለ 10 ዓመታት"], c: 0 }
             ]
         }; 
 
@@ -701,12 +788,13 @@
             vBox.innerText = nodeData.verse;
             vBox.style.display = 'inline-block'; 
 
-            document.querySelectorAll('.map-node').forEach(n => n.classList.remove('active-node'));
+            document.querySelectorAll('.map-node, .mountain-node').forEach(n => n.classList.remove('active-node'));
             const activeCircle = document.getElementById(`n-${nodeName}`);
             if (activeCircle) activeCircle.classList.add('active-node');
         } 
 
         function switchTier(tierKey) {
+            if(!studentName) return;
             activeTier = tierKey;
             currentQuestionIdx = 0;
             cumulativeScore = 0;
@@ -717,7 +805,7 @@
             const badge = document.getElementById('header-level-badge');
             if(tierKey === 'easy') badge.innerText = "ቀላል ደረጃ (1-15)";
             if(tierKey === 'medium') badge.innerText = "መካከለኛ ደረጃ (16-35)";
-            if(tierKey === 'hard') badge.innerText = "ከባድ ደረጃ (36-50)"; 
+            if(tierKey === 'hard') badge.innerText = "ሐዋርያት ታሪክ (36-50)"; 
 
             document.getElementById('ui-scoreboard').style.display = 'none';
             document.getElementById('quiz-interactive-area').style.display = 'block'; 
@@ -822,6 +910,9 @@
             document.getElementById('final-score-percent').innerText = `${percentage}%`;
 
             let readableLevel = activeTier === 'easy' ? "ቀላል (Easy)" : activeTier === 'medium' ? "መካከለኛ (Medium)" : "ከባድ (Hard)";
+            
+            // Populating Identity into Card
+            document.getElementById('r-name').innerText = studentName;
             document.getElementById('r-level').innerText = readableLevel;
             document.getElementById('r-score').innerText = `${cumulativeScore} / ${maxScore}`;
             document.getElementById('r-time').innerText = `${formattedElapsedTime} ደቂቃ`;
@@ -830,27 +921,24 @@
 
             let evaluationMsg = "";
             if (percentage === 100) {
-                evaluationMsg = "ድንቅ አፈጻጸም! ሁሉንም ጥያቄዎች በትክክል መልሰዋል።";
+                evaluationMsg = `ድንቅ አፈጻጸም ${studentName}! ሁሉንም ጥያቄዎች በትክክል መልሰዋል።`;
             } else if (percentage >= 70) {
-                evaluationMsg = "በጣም ጥሩ ውጤት ነው! አብዛኛዎቹን ጥያቄዎች በትክክል መለሱ።";
+                evaluationMsg = `በጣም ጥሩ ውጤት ነው ${studentName}! አብዛኛዎቹን ጥያቄዎች በትክክል መለሱ።`;
             } else {
-                evaluationMsg = "ደረጃውን አጠናቀዋል። ድጋሚ በመሞከር ውጤትዎን ያሻሽሉ።";
+                evaluationMsg = `${studentName} ደረጃውን አጠናቀዋል። ድጋሚ በመሞከር ውጤትዎን ያሻሽሉ።`;
             }
             document.getElementById('final-eval-msg').innerText = evaluationMsg;
             document.getElementById('ui-progress').style.width = '100%';
 
-            // Trigger Enhanced Multi-Payload Transmission
             transmitReportToTelegram(readableLevel, cumulativeScore, maxScore, formattedElapsedTime, percentage, letterGrade);
         }
 
-        /* --- ENHANCED TELEGRAM DISPATCHER (IMAGE + TEXT CORRECTION) --- */
         function transmitReportToTelegram(level, score, max, time, percent, grade) {
             const statusLabel = document.getElementById('tg-sending-status');
             statusLabel.innerText = "ሪፖርት ካርዱን በማዘጋጀት ላይ... ⏳";
 
             const targetElement = document.getElementById('printable-report');
 
-            // Render DOM to Image Canvas
             html2canvas(targetElement, { 
                 scale: 2, 
                 useCORS: true, 
@@ -871,8 +959,9 @@
                         if (!res.ok) throw new Error("Photo delivery failed");
                         statusLabel.innerText = "የፎቶ ሪፖርት ተልኳል! ሙሉ የፅሁፍ መግለጫውን በመላክ ላይ... 📨";
                         
-                        // 2. Format Separate Clean HTML Text Payload
-                        const textMessage = `<b>📜 የትንሹ ፈተና ውጤት ማጠቃለያ ሪፖርት (TEXT REPORT)</b>\n\n` +
+                        // 2. Format HTML Text Payload
+                        const textMessage = `<b>📜 የትንሹ ፈተና ውጤት ማጠቃለያ ሪፖርት</b>\n\n` +
+                                            `• <b>የተማሪው ስም:</b> <code>${studentName}</code>\n` +
                                             `• <b>የተፈተኑበት ደረጃ:</b> ${level}\n` +
                                             `• <b>ያገኙት ነጥብ:</b> <code>${score} / ${max}</code>\n` +
                                             `• <b>የወሰደው ጊዜ:</b> <code>${time} ደቂቃ</code>\n` +
@@ -901,7 +990,7 @@
                     })
                     .catch(err => {
                         console.error(err);
-                        statusLabel.innerText = "❌ ስህተት፡ መረጃውን ወደ ቴሌግራም መላክ አልተቻለም። Bot Token ወይም Chat ID ያረጋግጡ።";
+                        statusLabel.innerText = "❌ ስህተት፡ መረጃውን ወደ ቴሌግራም መላክ አልተቻለም።";
                         statusLabel.style.color = "#d9534f";
                     });
                 }, 'image/png');
@@ -911,10 +1000,6 @@
         function restartCurrentTier() {
             switchTier(activeTier);
         }
-
-        window.onload = () => {
-            switchTier('easy');
-        };
     </script>
 </body>
 </html>
