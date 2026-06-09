@@ -395,10 +395,10 @@
             color: #fff;
         }
         .tg-status {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             margin-top: 15px;
-            color: #666;
-            font-style: italic;
+            color: #111;
+            font-weight: bold;
         }
 
         /* --- FOOTER --- */
@@ -437,7 +437,6 @@
 
             <div class="map-wrapper">
                 <svg viewBox="0 0 500 750">
-                    <!-- Topography Lines -->
                     <g class="grid-line">
                         <line x1="50" y1="0" x2="50" y2="750" /><line x1="100" y1="0" x2="100" y2="750" />
                         <line x1="150" y1="0" x2="150" y2="750" /><line x1="200" y1="0" x2="200" y2="750" />
@@ -448,21 +447,17 @@
                         <line x1="0" y1="450" x2="500" y2="450" /><line x1="0" y1="600" x2="500" y2="600" />
                     </g> 
 
-                    <!-- Coastline & Real Water Paths -->
                     <path class="coastline" d="M 0,60 Q 85,130 75,230 T 45,430 T 95,590 T 15,750" />
-                    <path class="water" d="M 365,165 C 390,155 405,175 400,200 C 390,225 370,215 365,200 Z" /> <!-- Sea of Galilee -->
-                    <path class="river" d="M 377,210 Q 365,255 380,305 T 370,405 T 385,495" /> <!-- Jordan River -->
-                    <path class="water" d="M 385,495 C 410,500 415,545 410,585 C 405,625 400,655 380,655 C 365,655 370,585 375,545 Z" /> <!-- Dead Sea --> 
+                    <path class="water" d="M 365,165 C 390,155 405,175 400,200 C 390,225 370,215 365,200 Z" />
+                    <path class="river" d="M 377,210 Q 365,255 380,305 T 370,405 T 385,495" />
+                    <path class="water" d="M 385,495 C 410,500 415,545 410,585 C 405,625 400,655 380,655 C 365,655 370,585 375,545 Z" />
 
-                    <!-- Interconnecting Grid Paths -->
                     <path class="route-path" d="M 375,120 L 320,195 L 345,245 L 375,340 L 280,565 L 295,615" /> 
 
-                    <!-- Geographical Labels -->
                     <text x="30" y="300" class="node-text" transform="rotate(-90 30 300)" style="fill:var(--mid-gray); font-weight:300;">ሜዲትራኒያን ባህር</text>
                     <text x="415" y="190" class="node-text" style="font-size:8px;">የገሊላ ባህር</text>
                     <text x="425" y="575" class="node-text" style="font-size:8px;">የሙት ባህር</text> 
 
-                    <!-- Dynamic Structural Nodes -->
                     <circle class="map-node" id="n-ቅፍርናሆም" cx="375" cy="160" r="5.5" onclick="clickMapNode('ቅፍርናሆም')" />
                     <text x="390" y="155" class="node-text">ቅፍርናሆም</text> 
 
@@ -501,14 +496,12 @@
             </div> 
 
             <div class="quiz-box">
-                <!-- Segmented Control for Levels -->
                 <div class="difficulty-nav">
                     <button class="diff-btn active" id="tier-easy" onclick="switchTier('easy')">ቀላል (1-15)</button>
                     <button class="diff-btn" id="tier-medium" onclick="switchTier('medium')">መካከለኛ (16-35)</button>
                     <button class="diff-btn" id="tier-hard" onclick="switchTier('hard')">ከባድ (36-50)</button>
                 </div> 
 
-                <!-- Quiz Core Sandbox -->
                 <div id="quiz-interactive-area">
                     <div class="stat-line">
                         <span id="ui-counter">ጥያቄ 01 / 15</span>
@@ -520,12 +513,10 @@
                     </div> 
 
                     <div class="quest-text" id="ui-question">
-                        Mጽሐፍ ቅዱሳዊ ጥያቄዎች እዚህ ይጫናሉ...
+                        መጽሐፍ ቅዱሳዊ ጥያቄዎች እዚህ ይጫናሉ...
                     </div> 
 
-                    <div class="options-group" id="ui-options-box">
-                        <!-- Rendered by System Engine -->
-                    </div> 
+                    <div class="options-group" id="ui-options-box"></div> 
 
                     <div class="ctrl-area">
                         <button class="btn-black" id="ui-next-btn" onclick="advanceEngine()" disabled>ቀጣይ ጥያቄ</button>
@@ -563,20 +554,16 @@
         <div>PRODUCTION YEAR: 2026</div>
     </footer> 
 
-    <!-- html2canvas Library inclusion to convert DOM element to clean raw Image file -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
-        /* --- TELEGRAM CONFIG MATRIX --- */
-        const TG_CONFIG = {
-            botToken: "8289930496:AAHKqEPvRYaGQfRfsCjSBbyk-53dqzzzu0s",
-            chatId: "-1003967325171"
-        };
+        /* --- TELEGRAM DYNAMIC KEY CONSTANTS --- */
+        const TG_BOT_TOKEN = "8289930496:AAHKqEPvRYaGQfRfsCjSBbyk-53dqzzzu0s";
+        const TG_CHAT_ID = "-1003967325171";
 
-        /* --- GEOGRAPHY KNOWLEDGE REGISTRY DATABASE --- */
         const geoRegistry = {
             "ቅፍርናሆም": {
                 title: "ቅፍርናሆም (Capernaum)",
-                desc: "በገሊላ ባህር ሰሜናዊ ጫፍ ላይ የምትገኝ ከተማ ስትሆን፣ ጌታችን በርካታ ደቀመዛሙርትን የጠራባትና በርካታ ተአምራትን በማድረግ 'የራሱ ከተማ' የተባለች ስፍራ ናት።",
+                desc: "በገ黎ላ ባህር ሰሜናዊ ጫፍ ላይ የምትገኝ ከተማ ስትሆን፣ ጌታችን በርካታ ደቀመዛሙርትን የጠራባትና በርካታ ተአምራትን በማድረግ 'የራሱ ከተማ' የተባለች ስፍራ ናት።",
                 verse: "ማቴዎስ 9:1 — 'በታንኳም ገብቶ ተሻገረና ወደ ገዛ ከተማው መጣ።'"
             },
             "ቃና": {
@@ -596,7 +583,7 @@
             },
             "ኢያሪኮ": {
                 title: "ኢያሪኮ (Jericho)",
-                desc: "ከባህር ወለል በታች የምትገኝ ጥንታዊት ከተማ ስትሆን፣ በብሉይ ኪዳን ታሪክ የእያሱ መሪነት ግንቧ የወደቀባት፣ በአዲስ ኪዳን ደግሞ ዘኬዎስ ጌታን የተቀበለባትና ዕውሩ በርጤሜዎስ የበራባት ናት።",
+                desc: "ከባህር ወለል በታች የምትገኝ ጥንጨማሪት ከተማ ስትሆን፣ በብሉይ ኪዳን ታሪክ የእያሱ መሪነት ግንቧ የወደቀባት፣ በአዲስ ኪዳን ደግሞ ዘኬዎስ ጌታን የተቀበለባትና ዕውሩ በርጤሜዎስ የበራባት ናት።",
                 verse: "ሉቃስ 19:1 — 'ወደ ኢያሪኮም ገብቶ ያልፍ ነበር።'"
             },
             "ኢየሩሳሌም": {
@@ -611,7 +598,6 @@
             }
         }; 
 
-        /* --- THE 50 QUESTION MASTER COMPREHENSIVE DATA MATRIX --- */
         const masterQuizDatabase = {
             easy: [
                 { q: "1. ጌታችን ኢየሱስ ክርስቶስ በሥጋ የተወለደበት ታሪካዊ ስፍራ የትኛው ነው?", o: ["ናዝሬት", "ቤተልሔም", "ኢየሩሳሌም", "ቅፍርናሆም"], c: 1 },
@@ -671,13 +657,11 @@
             ]
         }; 
 
-        /* --- STATE ENGINES --- */
         let activeTier = 'easy';
         let currentQuestionIdx = 0;
         let cumulativeScore = 0;
         let isOptionLocked = false; 
 
-        /* --- TIMER ENGINE REGISTRY (15 MINUTES TOTAL TIME) --- */
         let totalSecondsAllocated = 15 * 60; 
         let countdownTicker = null;
         let spentSecondsCounter = 0;
@@ -691,7 +675,7 @@
             countdownTicker = setInterval(() => {
                 if (totalSecondsAllocated <= 0) {
                     clearInterval(countdownTicker);
-                    displayFinalScoreboard(); // Auto-ends quiz when time runs dry
+                    displayFinalScoreboard();
                 } else {
                     totalSecondsAllocated--;
                     spentSecondsCounter++;
@@ -706,7 +690,6 @@
             document.getElementById('ui-timer').innerText = `ቀሪ ጊዜ: ${mins}:${secs < 10 ? '0' + secs : secs}`;
         }
 
-        /* --- MAP CONTROL --- */
         function clickMapNode(nodeName) {
             const nodeData = geoRegistry[nodeName];
             if (!nodeData) return; 
@@ -723,7 +706,6 @@
             if (activeCircle) activeCircle.classList.add('active-node');
         } 
 
-        /* --- QUIZ SYSTEMS CONTROLLER --- */
         function switchTier(tierKey) {
             activeTier = tierKey;
             currentQuestionIdx = 0;
@@ -811,7 +793,6 @@
             }
         }
 
-        /* --- COMPUTATIONAL GRADE ALGORITHM --- */
         function computeLetterGrade(percentage) {
             if (percentage === 100) return "A+";
             if (percentage >= 90)  return "A";
@@ -823,7 +804,7 @@
         }
 
         function displayFinalScoreboard() {
-            clearInterval(countdownTicker); // Freeze timer clock
+            clearInterval(countdownTicker); 
             document.getElementById('quiz-interactive-area').style.display = 'none';
             
             const scoreboard = document.getElementById('ui-scoreboard');
@@ -834,14 +815,12 @@
             const percentage = Math.round((cumulativeScore / maxScore) * 100);
             const letterGrade = computeLetterGrade(percentage);
 
-            // Compute elapsed time metrics
             let spentMins = Math.floor(spentSecondsCounter / 60);
             let spentSecs = spentSecondsCounter % 60;
             let formattedElapsedTime = `${spentMins}:${spentSecs < 10 ? '0' + spentSecs : spentSecs}`;
 
             document.getElementById('final-score-percent').innerText = `${percentage}%`;
 
-            // Update DOM inside Report Card Viewport
             let readableLevel = activeTier === 'easy' ? "ቀላል (Easy)" : activeTier === 'medium' ? "መካከለኛ (Medium)" : "ከባድ (Hard)";
             document.getElementById('r-level').innerText = readableLevel;
             document.getElementById('r-score').innerText = `${cumulativeScore} / ${maxScore}`;
@@ -851,61 +830,78 @@
 
             let evaluationMsg = "";
             if (percentage === 100) {
-                evaluationMsg = "ድንቅ አፈጻጸም! ሁሉንም ጥያቄዎች በትክክል መልሰዋል። የመጽሐፍ ቅዱስ መልክዓ-ምድር እውቀትዎ እጅግ ከፍተኛ ነው።";
+                evaluationMsg = "ድንቅ አፈጻጸም! ሁሉንም ጥያቄዎች በትክክል መልሰዋል።";
             } else if (percentage >= 70) {
-                evaluationMsg = "በጣም ጥሩ ውጤት ነው! አብዛኛዎቹን ጥያቄዎች በትክክል መለሱ። ጥቂት ስህተቶችን ለማስተካከል ካርታውን በድጋሚ ይመርምሩ።";
+                evaluationMsg = "በጣም ጥሩ ውጤት ነው! አብዛኛዎቹን ጥያቄዎች በትክክል መለሱ።";
             } else {
-                evaluationMsg = "ደረጃውን አጠናቀዋል። የተሻለ ውጤት ለማምጣት ካርታውን በመንካት ቦታዎቹንና ጥቅሶቹን በደንብ ያጥኑና ድጋሚ ይፈተኑ።";
+                evaluationMsg = "ደረጃውን አጠናቀዋል። ድጋሚ በመሞከር ውጤትዎን ያሻሽሉ።";
             }
             document.getElementById('final-eval-msg').innerText = evaluationMsg;
             document.getElementById('ui-progress').style.width = '100%';
 
-            // Trigger Automated Transmission To Telegram
+            // Trigger Enhanced Multi-Payload Transmission
             transmitReportToTelegram(readableLevel, cumulativeScore, maxScore, formattedElapsedTime, percentage, letterGrade);
         }
 
-        /* --- TELEGRAM TELEMETRY TRANSMISSION ENGINE --- */
+        /* --- ENHANCED TELEGRAM DISPATCHER (IMAGE + TEXT CORRECTION) --- */
         function transmitReportToTelegram(level, score, max, time, percent, grade) {
             const statusLabel = document.getElementById('tg-sending-status');
-            statusLabel.innerText = "ሪፖርት ካርዱን ወደ ቴሌግራም በመላክ ላይ... ⏳";
+            statusLabel.innerText = "ሪፖርት ካርዱን በማዘጋጀት ላይ... ⏳";
 
             const targetElement = document.getElementById('printable-report');
 
-            // Capture DOM node layout structure and convert to clean Blob file
-            html2canvas(targetElement, { scale: 2, useCORS: true }).then(canvas => {
+            // Render DOM to Image Canvas
+            html2canvas(targetElement, { 
+                scale: 2, 
+                useCORS: true, 
+                logging: false,
+                allowTaint: true 
+            }).then(canvas => {
                 canvas.toBlob(blob => {
-                    const payload = new FormData();
-                    payload.append('chat_id', TG_CONFIG.chatId);
-                    payload.append('photo', blob, 'report_card.png');
-                    
-                    // Formatted Caption Text (HTML syntax payload)
-                    const captionText = `<b>📜 የፈተና ውጤት ማጠቃለያ ሪፖርት</b>\n\n` +
-                                        `• <b>የተፈተኑበት ደረጃ:</b> ${level}\n` +
-                                        `• <b>ያገኙት ነጥብ:</b> <code>${score} / ${max}</code>\n` +
-                                        `• <b>የፈጀበት ጊዜ:</b> <code>${time} ደቂቃ</code>\n` +
-                                        `• <b>የውጤት ፐርሰንት:</b> <code>${percent}%</code>\n` +
-                                        `• <b>የተሰጠው ደረጃ:</b> ⭐️ <b>[ ${grade} ]</b> ⭐️\n\n` +
-                                        `<i>ማስታወሻ: ይህ ሪፖርት ከስርዓቱ በራስ-ሰር የተላከ ነው።</i>`;
-                    
-                    payload.append('caption', captionText);
-                    payload.append('parse_mode', 'HTML');
+                    const photoPayload = new FormData();
+                    photoPayload.append('chat_id', TG_CHAT_ID);
+                    photoPayload.append('photo', blob, 'report_card.png');
 
-                    // Fire Native Request directly to Telegram Bot Server APIs
-                    fetch(`https://api.telegram.org/bot${TG_CONFIG.botToken}/sendPhoto`, {
+                    // 1. Send Report Card Photo First
+                    fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendPhoto`, {
                         method: 'POST',
-                        body: payload
+                        body: photoPayload
                     })
-                    .then(response => {
-                        if(response.ok) {
-                            statusLabel.innerText = "✅ የፎቶ ሪፖርት ካርዱ በተሳካ ሁኔታ ወደ ቴሌግራም ተልኳል!";
+                    .then(res => {
+                        if (!res.ok) throw new Error("Photo delivery failed");
+                        statusLabel.innerText = "የፎቶ ሪፖርት ተልኳል! ሙሉ የፅሁፍ መግለጫውን በመላክ ላይ... 📨";
+                        
+                        // 2. Format Separate Clean HTML Text Payload
+                        const textMessage = `<b>📜 የትንሹ ፈተና ውጤት ማጠቃለያ ሪፖርት (TEXT REPORT)</b>\n\n` +
+                                            `• <b>የተፈተኑበት ደረጃ:</b> ${level}\n` +
+                                            `• <b>ያገኙት ነጥብ:</b> <code>${score} / ${max}</code>\n` +
+                                            `• <b>የወሰደው ጊዜ:</b> <code>${time} ደቂቃ</code>\n` +
+                                            `• <b>የውጤት ፐርሰንት:</b> <code>${percent}%</code>\n` +
+                                            `• <b>የተሰጠው የአፈጻጸም ደረጃ:</b> ⭐️ <b>[ ${grade} ]</b> ⭐️\n\n` +
+                                            `<i>ማሳሰቢያ፦ ይህ መረጃ ከሲስተሙ በቀጥታ በራስ-ሰር የተላከ ነው።</i>`;
+
+                        // 3. Send Text Message
+                        return fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                chat_id: TG_CHAT_ID,
+                                text: textMessage,
+                                parse_mode: 'HTML'
+                            })
+                        });
+                    })
+                    .then(textRes => {
+                        if (textRes.ok) {
+                            statusLabel.innerText = "✅ የፎቶ ሪፖርት ካርዱ እና ሙሉ ፅሁፉ በተሳካ ሁኔታ ወደ ቴሌግራም ተልኳል!";
                             statusLabel.style.color = "#4caf50";
                         } else {
-                            statusLabel.innerText = "❌ ስህተት፡ ሪፖርቱን መላክ አልተቻለም። እባክዎ Bot/Chat ማዋቀሪያውን ያረጋግጡ።";
-                            statusLabel.style.color = "#d9534f";
+                            throw new Error("Text delivery failed");
                         }
                     })
                     .catch(err => {
-                        statusLabel.innerText = "❌ ከአውታረ መረብ ችግር ጋር የተያያዘ ስህተት ተከስቷል።";
+                        console.error(err);
+                        statusLabel.innerText = "❌ ስህተት፡ መረጃውን ወደ ቴሌግራም መላክ አልተቻለም። Bot Token ወይም Chat ID ያረጋግጡ።";
                         statusLabel.style.color = "#d9534f";
                     });
                 }, 'image/png');
@@ -916,7 +912,6 @@
             switchTier(activeTier);
         }
 
-        // Initialize App Engine with Easy Tier on load
         window.onload = () => {
             switchTier('easy');
         };
